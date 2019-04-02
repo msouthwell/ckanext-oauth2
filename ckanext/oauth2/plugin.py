@@ -124,7 +124,7 @@ class OAuth2Plugin(plugins.SingletonPlugin):
         return m
 
     def identify(self):
-        log.debug('identify my branch')
+        log.debug('identify')
 
         def _refresh_and_save_token(user_name):
             new_token = self.oauth2helper.refresh_token(user_name)
@@ -135,10 +135,10 @@ class OAuth2Plugin(plugins.SingletonPlugin):
         apikey = toolkit.request.headers.get(self.authorization_header, '')
         user_name = None
 
-        log.info('headers')
-        log.info(toolkit.request.headers)
+        log.debug('headers')
+        log.debug(toolkit.request.headers)
 
-        log.info('First check API key')
+        log.debug('First check API key')
         log.info(apikey)
         if self.authorization_header == "authorization":
             if apikey.startswith('Bearer '):
@@ -146,8 +146,8 @@ class OAuth2Plugin(plugins.SingletonPlugin):
             else:
                 apikey = ''
 
-        log.info('Checking API key')
-        log.info(apikey)
+        log.debug('Checking API key')
+        log.debug(apikey)
         # This API Key is not the one of CKAN, it's the one provided by the OAuth2 Service
         log.info("checking api key %s", apikey)
         if apikey:
