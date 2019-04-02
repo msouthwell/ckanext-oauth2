@@ -126,6 +126,7 @@ class OAuth2Helper(object):
         return token
 
     def identify(self, token):
+        log.debug('oauth2 identify %s', token)
         try:
             if self.legacy_idm:
                 profile_response = requests.get(self.profile_api_url + '?access_token=%s' % token['access_token'], verify=self.verify_https)
@@ -140,6 +141,7 @@ class OAuth2Helper(object):
             else:
                 raise
 
+        log.debug('profile_response %s', profile_response.json())
         # Token can be invalid
         if not profile_response.ok:
             error = profile_response.json()
