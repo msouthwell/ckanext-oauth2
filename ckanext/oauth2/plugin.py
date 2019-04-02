@@ -142,11 +142,14 @@ class OAuth2Plugin(plugins.SingletonPlugin):
                 apikey = ''
 
         # This API Key is not the one of CKAN, it's the one provided by the OAuth2 Service
+        log.info("checking api key %s", apikey)
         if apikey:
             try:
                 token = {'access_token': apikey}
                 user_name = self.oauth2helper.identify(token)
-            except Exception:
+            except Exception as e:
+                log.warning('My exception')
+                log.warning(e)
                 pass
 
         # If the authentication via API fails, we can still log in the user using session.
@@ -159,7 +162,8 @@ class OAuth2Plugin(plugins.SingletonPlugin):
             g.user = user_name
             toolkit.c.user = user_name
             toolkit.c.usertoken = self.oauth2helper.get_stored_token(user_name)
-            toolkit.c.usertoken_refresh = partial(_refresh_and_save_token, user_name)
+            toolkit.c.usertoken_refresh = partial(
+                _refresh_and_save_token, user_name)
         else:
             g.user = None
             log.warn('The user is not currently logged...')
@@ -175,10 +179,14 @@ class OAuth2Plugin(plugins.SingletonPlugin):
 
     def update_config(self, config):
         # Update our configuration
-        self.register_url = os.environ.get("CKAN_OAUTH2_REGISTER_URL", config.get('ckan.oauth2.register_url', None))
-        self.reset_url = os.environ.get("CKAN_OAUTH2_RESET_URL", config.get('ckan.oauth2.reset_url', None))
-        self.edit_url = os.environ.get("CKAN_OAUTH2_EDIT_URL", config.get('ckan.oauth2.edit_url', None))
-        self.authorization_header = os.environ.get("CKAN_OAUTH2_AUTHORIZATION_HEADER", config.get('ckan.oauth2.authorization_header', 'Authorization')).lower()
+        self.register_url = os.environ.get(
+            "CKAN_OAUTH2_REGISTER_URL", config.get('ckan.oauth2.register_url', None))
+        self.reset_url = os.environ.get(
+            "CKAN_OAUTH2_RESET_URL", config.get('ckan.oauth2.reset_url', None))
+        self.edit_url = os.environ.get(
+            "CKAN_OAUTH2_EDIT_URL", config.get('ckan.oauth2.edit_url', None))
+        self.authorization_header = os.environ.get("CKAN_OAUTH2_AUTHORIZATION_HEADER", config.get(
+            'ckan.oauth2.authorization_header', 'Authorization')).lower()
 
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
         # that CKAN will use this plugin's custom templates.
