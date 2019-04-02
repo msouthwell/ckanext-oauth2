@@ -135,6 +135,9 @@ class OAuth2Plugin(plugins.SingletonPlugin):
         apikey = toolkit.request.headers.get(self.authorization_header, '')
         user_name = None
 
+        log.info('headers')
+        log.info(toolkit.request.headers)
+
         log.info('First check API key')
         log.info(apikey)
         if self.authorization_header == "authorization":
