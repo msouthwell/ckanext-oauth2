@@ -140,6 +140,9 @@ class OAuth2Plugin(plugins.SingletonPlugin):
 
         log.debug('First check API key')
         log.info(apikey)
+        
+        log.debug('Request')
+        log.debug(toolkit.request)
         if self.authorization_header == "authorization":
             if apikey.startswith('Bearer '):
                 apikey = apikey[7:].strip()
