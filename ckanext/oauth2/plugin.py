@@ -124,7 +124,7 @@ class OAuth2Plugin(plugins.SingletonPlugin):
         return m
 
     def identify(self):
-        log.debug('identify')
+        log.debug('identify my branch')
 
         def _refresh_and_save_token(user_name):
             new_token = self.oauth2helper.refresh_token(user_name)
@@ -135,12 +135,16 @@ class OAuth2Plugin(plugins.SingletonPlugin):
         apikey = toolkit.request.headers.get(self.authorization_header, '')
         user_name = None
 
+        log.info('First check API key')
+        log.info(apikey)
         if self.authorization_header == "authorization":
             if apikey.startswith('Bearer '):
                 apikey = apikey[7:].strip()
             else:
                 apikey = ''
 
+        log.info('Checking API key')
+        log.info(apikey)
         # This API Key is not the one of CKAN, it's the one provided by the OAuth2 Service
         log.info("checking api key %s", apikey)
         if apikey:
@@ -152,6 +156,7 @@ class OAuth2Plugin(plugins.SingletonPlugin):
                 log.warning(e)
                 pass
 
+        log.info('Checking  repoze identity')
         # If the authentication via API fails, we can still log in the user using session.
         if user_name is None and 'repoze.who.identity' in environ:
             user_name = environ['repoze.who.identity']['repoze.who.userid']
