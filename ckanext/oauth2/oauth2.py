@@ -35,6 +35,7 @@ from oauthlib.oauth2 import InsecureTransportError
 import requests
 from requests_oauthlib import OAuth2Session
 import six
+import pyjwt
 
 import constants
 
@@ -127,31 +128,8 @@ class OAuth2Helper(object):
 
     def identify(self, token):
         log.debug("OAuth2 Identify and token")
-        token['token_type'] = 'Bearer'
-        log.debug(token)
         try:
-            if self.legacy_idm:
-                profile_response = requests.get(self.profile_api_url + '?access_token=%s' % token['access_token'], verify=self.verify_https)
-            else:
-                oauth = OAuth2Session(self.client_id, token=token)
-                log.debug("client_id %s", self.client_id)
-                log.debug("profile_api_url %s", self.profile_api_url)
-                headers = {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Bearer ' + token['access_token']
-                }       
-                profile_response = requests.get(self.profile_api_url, headers=headers, verify=self.verify_https)
-                # profile_response = oauth.get(self.profile_api_url, verify=self.verify_https)
-
-        except requests.exceptions.SSLError as e:
-            # TODO search a better way to detect invalid certificates
-            log.error("SSL Error")
-            log.error(e)
-            if "verify failed" in six.text_type(e):
-                raise InsecureTransportError()
-            else:
-                raise
+            profile_reponse = jwt.decode(token, verify=False)
         except Exception as e:
             log.debug('Unknown Exception')
             log.error(e)
@@ -159,9 +137,7 @@ class OAuth2Helper(object):
             raise e
 
         log.debug("Profile response")
-        log.debug(profile_response.status_code)
-        log.debug(profile_response.reason)
-        log.debug(profile_response.text)
+        log.debug(profile_response)
         # Token can be invalid
         if not profile_response.ok:
             log.debug("profile is not valid")
