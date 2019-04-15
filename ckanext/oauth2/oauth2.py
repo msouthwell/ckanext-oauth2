@@ -151,8 +151,8 @@ class OAuth2Helper(object):
         #        profile_response.raise_for_status()
         if True:
             log.debug("Token is valid")
-            user_data = profile_response.json()
-            print(user_data)
+            user_data = profile_response
+            log.debug(user_data)
             email = user_data[self.profile_api_mail_field]
             user_name = user_data[self.profile_api_user_field]
 
