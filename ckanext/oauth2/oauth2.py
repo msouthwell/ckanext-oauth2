@@ -144,7 +144,7 @@ class OAuth2Helper(object):
                 raise
 
         log.debug("Profile response")
-        log.debug(profile_response)
+        log.debug(profile_response.json())
         # Token can be invalid
         if not profile_response.ok:
             error = profile_response.json()
