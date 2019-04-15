@@ -126,6 +126,7 @@ class OAuth2Helper(object):
         return token
 
     def identify(self, token):
+        print("In identify")
         try:
             if self.legacy_idm:
                 profile_response = requests.get(self.profile_api_url + '?access_token=%s' % token['access_token'], verify=self.verify_https)
@@ -148,7 +149,9 @@ class OAuth2Helper(object):
             else:
                 profile_response.raise_for_status()
         else:
+            print("Token is valid")
             user_data = profile_response.json()
+            print(user_data)
             email = user_data[self.profile_api_mail_field]
             user_name = user_data[self.profile_api_user_field]
 
