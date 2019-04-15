@@ -136,7 +136,8 @@ class OAuth2Helper(object):
                 log.debug("client_id %s", self.client_id)
                 log.debug("profile_api_url %s", self.profile_api_url)
                 log.debug("verify_https %s", self.verify_https)
-                profile_response = oauth.get(self.profile_api_url, verify=self.verify_https)
+                headers = {'Authorization': 'Bearer ' + token}
+                profile_response = oauth.get(self.profile_api_url, verify=self.verify_https, headers=headers)
 
         except requests.exceptions.SSLError as e:
             # TODO search a better way to detect invalid certificates
