@@ -134,9 +134,9 @@ class OAuth2Plugin(plugins.SingletonPlugin):
         log.debug('headers')
         log.debug(toolkit.request.headers)
         environ = toolkit.request.environ
-        log.debug('environ')
-        log.debug(environ)
         apikey = toolkit.request.headers.get(self.authorization_header, '')
+        log.debug('apikey')
+        log.debug(apikey)
         user_name = None
 
         if self.authorization_header == "authorization":
@@ -149,6 +149,8 @@ class OAuth2Plugin(plugins.SingletonPlugin):
         if apikey:
             try:
                 token = {'access_token': apikey}
+                log.debug('token')
+                log.debug(token)
                 user_name = self.oauth2helper.identify(token)
             except Exception:
                 log.debug('API key exception')
