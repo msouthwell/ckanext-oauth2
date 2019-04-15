@@ -128,63 +128,47 @@ class OAuth2Helper(object):
         return token
 
     def identify(self, token):
-        log.debug("OAuth2 Identify and token")
+        log.debug("OAuth2 Identify using the userinfo_token")
         try:
-            profile_response = jwt.decode(token['userinfo_token'], verify=False)
+            user_data = jwt.decode(token['userinfo_token'], verify=False)
         except Exception as e:
             log.debug('Unknown Exception')
             log.error(e)
-            log.error(sys.exc_info()[0])
             raise e
 
-        log.debug("Profile response")
-        log.debug(profile_response)
-        # Token can be invalid
-        #if not profile_response.ok:
-        #    log.debug("profile is not valid")
-        #    error = profile_response.json()
-        #    log.debug("error")
-        #    log.debug(error)
-        #    if error.get('error', '') == 'invalid_token':
-        #        raise ValueError(error.get('error_description'))
-        #    else:
-        #        profile_response.raise_for_status()
-        if True:
-            log.debug("Token is valid")
-            user_data = profile_response
-            log.debug(user_data)
-            email = user_data[self.profile_api_mail_field]
-            user_name = user_data[self.profile_api_user_field]
+        log.debug("user_data %s", user_data)
+        email = user_data[self.profile_api_mail_field]
+        user_name = user_data[self.profile_api_user_field]
 
-            # In CKAN can exists more than one user associated with the same email
-            # Some providers, like Google and FIWARE only allows one account per email
-            user = None
-            users = model.User.by_email(email)
-            if len(users) == 1:
-                user = users[0]
+        # In CKAN can exists more than one user associated with the same email
+        # Some providers, like Google and FIWARE only allows one account per email
+        user = None
+        users = model.User.by_email(email)
+        if len(users) == 1:
+           user = users[0]
 
-            # If the user does not exist, we have to create it...
-            if user is None:
-                user = model.User(email=email)
+        # If the user does not exist, we have to create it...
+        if user is None:
+           user = model.User(email=email)
 
-            # Now we update his/her user_name with the one provided by the OAuth2 service
-            # In the future, users will be obtained based on this field
-            user.name = user_name
+        # Now we update his/her user_name with the one provided by the OAuth2 service
+        # In the future, users will be obtained based on this field
+        user.name = user_name
 
-            # Update fullname
-            if self.profile_api_fullname_field != "" and self.profile_api_fullname_field in user_data:
-                user.fullname = user_data[self.profile_api_fullname_field]
+        # Update fullname
+        if self.profile_api_fullname_field != "" and self.profile_api_fullname_field in user_data:
+            user.fullname = user_data[self.profile_api_fullname_field]
 
-            # Update sysadmin status
-            if self.profile_api_groupmembership_field != "" and self.profile_api_groupmembership_field in user_data:
-                user.sysadmin = self.sysadmin_group_name in user_data[self.profile_api_groupmembership_field]
+        # Update sysadmin status
+        if self.profile_api_groupmembership_field != "" and self.profile_api_groupmembership_field in user_data:
+            user.sysadmin = self.sysadmin_group_name in user_data[self.profile_api_groupmembership_field]
 
-            # Save the user in the database
-            model.Session.add(user)
-            model.Session.commit()
-            model.Session.remove()
+        # Save the user in the database
+        model.Session.add(user)
+        model.Session.commit()
+        model.Session.remove()
 
-            return user.name
+        return user.name
 
     def _get_rememberer(self, environ):
         plugins = environ.get('repoze.who.plugins', {})
