@@ -124,20 +124,15 @@ class OAuth2Plugin(plugins.SingletonPlugin):
         return m
 
     def identify(self):
-        log.debug('identify, this is the debug ckanext-oauth2')
+        log.debug('starting identify')
 
         def _refresh_and_save_token(user_name):
             new_token = self.oauth2helper.refresh_token(user_name)
             if new_token:
                 toolkit.c.usertoken = new_token
 
-        log.debug('headers')
-        log.debug(toolkit.request.headers)
         environ = toolkit.request.environ
         apikey = toolkit.request.headers.get(self.authorization_header, '')
-        apikey = apikey.strip()
-        log.debug('apikey')
-        log.debug(apikey)
         user_name = None
 
         if self.authorization_header == "authorization":
