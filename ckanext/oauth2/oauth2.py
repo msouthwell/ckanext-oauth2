@@ -126,7 +126,7 @@ class OAuth2Helper(object):
         return token
 
     def identify(self, token):
-        print("In identify")
+        log.debug("OAuth2 Identify")
         try:
             if self.legacy_idm:
                 profile_response = requests.get(self.profile_api_url + '?access_token=%s' % token['access_token'], verify=self.verify_https)
@@ -136,11 +136,15 @@ class OAuth2Helper(object):
 
         except requests.exceptions.SSLError as e:
             # TODO search a better way to detect invalid certificates
+            log.error("SSL Error")
+            log.error(e)
             if "verify failed" in six.text_type(e):
                 raise InsecureTransportError()
             else:
                 raise
 
+        log.debug("Profile response")
+        log.debug(profile_response)
         # Token can be invalid
         if not profile_response.ok:
             error = profile_response.json()
@@ -149,7 +153,7 @@ class OAuth2Helper(object):
             else:
                 profile_response.raise_for_status()
         else:
-            print("Token is valid")
+            log.debug("Token is valid")
             user_data = profile_response.json()
             print(user_data)
             email = user_data[self.profile_api_mail_field]
