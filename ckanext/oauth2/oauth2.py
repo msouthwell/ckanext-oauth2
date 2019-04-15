@@ -139,7 +139,7 @@ class OAuth2Helper(object):
                 headers = {
                     'Accept': 'application/json',
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization: 'Bearer ' + token['access_token']
+                    'Authorization': 'Bearer ' + token['access_token']
                 }       
                 profile_response = requests.get(self.profile_api_url, headers=headers, verify=self.verify_https)
                 # profile_response = oauth.get(self.profile_api_url, verify=self.verify_https)
