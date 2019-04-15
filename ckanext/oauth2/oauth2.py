@@ -159,9 +159,9 @@ class OAuth2Helper(object):
             raise e
 
         log.debug("Profile response")
-        log.debug(profile_response.status_code())
-        log.debug(profile_response.reason())
-        log.debug(profile_response.text())
+        log.debug(profile_response.status_code)
+        log.debug(profile_response.reason)
+        log.debug(profile_response.text)
         # Token can be invalid
         if not profile_response.ok:
             log.debug("profile is not valid")
