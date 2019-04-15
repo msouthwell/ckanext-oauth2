@@ -131,7 +131,11 @@ class OAuth2Plugin(plugins.SingletonPlugin):
             if new_token:
                 toolkit.c.usertoken = new_token
 
+        log.debug('headers')
+        log.debug(toolkit.request.headers)
         environ = toolkit.request.environ
+        log.debug('environ')
+        log.debug(environ)
         apikey = toolkit.request.headers.get(self.authorization_header, '')
         user_name = None
 
@@ -147,6 +151,7 @@ class OAuth2Plugin(plugins.SingletonPlugin):
                 token = {'access_token': apikey}
                 user_name = self.oauth2helper.identify(token)
             except Exception:
+                log.debug('API key exception')
                 pass
 
         # If the authentication via API fails, we can still log in the user using session.
