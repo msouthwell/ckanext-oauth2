@@ -76,6 +76,7 @@ setup(
     ],
     install_requires=[
         'requests-oauthlib==0.8.0',
+        'pyjwt==1.7.1'
     ],
     tests_require=[
         'parameterized',
