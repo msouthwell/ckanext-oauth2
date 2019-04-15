@@ -129,7 +129,7 @@ class OAuth2Helper(object):
     def identify(self, token):
         log.debug("OAuth2 Identify and token")
         try:
-            profile_reponse = jwt.decode(token, verify=False)
+            profile_reponse = jwt.decode(token['userinfo_token'], verify=False)
         except Exception as e:
             log.debug('Unknown Exception')
             log.error(e)
