@@ -35,7 +35,7 @@ from oauthlib.oauth2 import InsecureTransportError
 import requests
 from requests_oauthlib import OAuth2Session
 import six
-import pyjwt
+import jwt
 
 import constants
 
@@ -139,16 +139,16 @@ class OAuth2Helper(object):
         log.debug("Profile response")
         log.debug(profile_response)
         # Token can be invalid
-        if not profile_response.ok:
-            log.debug("profile is not valid")
-            error = profile_response.json()
-            log.debug("error")
-            log.debug(error)
-            if error.get('error', '') == 'invalid_token':
-                raise ValueError(error.get('error_description'))
-            else:
-                profile_response.raise_for_status()
-        else:
+        #if not profile_response.ok:
+        #    log.debug("profile is not valid")
+        #    error = profile_response.json()
+        #    log.debug("error")
+        #    log.debug(error)
+        #    if error.get('error', '') == 'invalid_token':
+        #        raise ValueError(error.get('error_description'))
+        #    else:
+        #        profile_response.raise_for_status()
+        if True:
             log.debug("Token is valid")
             user_data = profile_response.json()
             print(user_data)
