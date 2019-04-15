@@ -135,6 +135,7 @@ class OAuth2Plugin(plugins.SingletonPlugin):
         log.debug(toolkit.request.headers)
         environ = toolkit.request.environ
         apikey = toolkit.request.headers.get(self.authorization_header, '')
+        apikey = apikey.strip()
         log.debug('apikey')
         log.debug(apikey)
         user_name = None
