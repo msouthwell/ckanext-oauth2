@@ -136,10 +136,7 @@ class OAuth2Helper(object):
                 oauth = OAuth2Session(self.client_id, token=token)
                 log.debug("client_id %s", self.client_id)
                 log.debug("profile_api_url %s", self.profile_api_url)
-                log.debug("verify_https %s", self.verify_https)
-                headers = {'Authorization': 'Bearer ' + token['access_token'],             "Accept": "application/json",
-            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"}
-                profile_response = oauth.get(self.profile_api_url, verify=self.verify_https, headers=headers)
+                profile_response = oauth.get(self.profile_api_url, verify=self.verify_https)
 
         except requests.exceptions.SSLError as e:
             # TODO search a better way to detect invalid certificates
@@ -149,14 +146,10 @@ class OAuth2Helper(object):
                 raise InsecureTransportError()
             else:
                 raise
-        except requests.exceptions.RequestException as e:
-            log.error("Unexpected error:")
+        except Exception as e:
+            log.debug('Unknown Exception')
             log.error(e)
             log.error(sys.exc_info()[0])
-            raise
-        except Exception as e:
-            log.debug('API key exception')
-            log.error(e)
             raise e
 
         log.debug("Profile response")
