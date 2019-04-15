@@ -148,8 +148,9 @@ class OAuth2Helper(object):
                 raise InsecureTransportError()
             else:
                 raise
-        except:
+        except requests.exceptions.RequestException as e:
             log.error("Unexpected error:")
+            log.error(e)
             log.error(sys.exc_info()[0])
             raise
 
