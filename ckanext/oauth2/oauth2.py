@@ -153,6 +153,10 @@ class OAuth2Helper(object):
             log.error(e)
             log.error(sys.exc_info()[0])
             raise
+        except Exception as e:
+            log.debug('API key exception')
+            log.error(e)
+            raise e
 
         log.debug("Profile response")
         log.debug(profile_response.status_code())
