@@ -126,13 +126,16 @@ class OAuth2Helper(object):
         return token
 
     def identify(self, token):
-        log.debug("OAuth2 Identify")
+        log.debug("OAuth2 Identify and token")
+        log.debug(token)
         try:
             if self.legacy_idm:
                 profile_response = requests.get(self.profile_api_url + '?access_token=%s' % token['access_token'], verify=self.verify_https)
             else:
                 oauth = OAuth2Session(self.client_id, token=token)
+                log.debug("client_id %s", self.client_id)
                 log.debug("profile_api_url %s", self.profile_api_url)
+                log.debug("verify_https %s", self.verify_https)
                 profile_response = oauth.get(self.profile_api_url, verify=self.verify_https)
 
         except requests.exceptions.SSLError as e:
