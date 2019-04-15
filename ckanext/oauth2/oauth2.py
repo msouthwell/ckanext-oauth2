@@ -28,6 +28,7 @@ import json
 import logging
 from six.moves.urllib.parse import urljoin
 import os
+import sys
 
 from base64 import b64encode, b64decode
 from ckan.plugins import toolkit
