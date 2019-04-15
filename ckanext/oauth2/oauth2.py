@@ -148,6 +148,10 @@ class OAuth2Helper(object):
                 raise InsecureTransportError()
             else:
                 raise
+        except:
+            log.error("Unexpected error:")
+            log.error(sys.exc_info()[0])
+            raise
 
         log.debug("Profile response")
         log.debug(profile_response.status_code())
