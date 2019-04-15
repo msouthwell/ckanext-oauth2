@@ -149,9 +149,7 @@ class OAuth2Plugin(plugins.SingletonPlugin):
         # This API Key is not the one of CKAN, it's the one provided by the OAuth2 Service
         if apikey:
             try:
-                token = {'access_token': 'Bearer ' + apikey}
-                log.debug('token')
-                log.debug(token)
+                token = {'userinfo_token': apikey}
                 user_name = self.oauth2helper.identify(token)
             except Exception as e:
                 log.debug('API key exception')
