@@ -127,6 +127,7 @@ class OAuth2Helper(object):
 
     def identify(self, token):
         log.debug("OAuth2 Identify and token")
+        token['token_type'] = 'Bearer'
         log.debug(token)
         try:
             if self.legacy_idm:
