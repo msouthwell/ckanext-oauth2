@@ -124,7 +124,7 @@ class OAuth2Plugin(plugins.SingletonPlugin):
         return m
 
     def identify(self):
-        log.debug('identify')
+        log.debug('identify, this is the debug ckanext-oauth2')
 
         def _refresh_and_save_token(user_name):
             new_token = self.oauth2helper.refresh_token(user_name)
